@@ -5,6 +5,9 @@
     },
     "rules": {
         "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "indent": ["error", 4],
+        "quotes": ["error", "double"],
+        "comma-dangle": ["error", "only-multiline"]
     }
 }
