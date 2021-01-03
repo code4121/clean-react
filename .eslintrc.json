@@ -1,5 +1,5 @@
 {
-    "extends": "standard-with-typescript",
+    "extends": ["standard-with-typescript", "plugin:jest/recommended"],
     "parserOptions": {
         "project": "./tsconfig.json"
     },
@@ -8,6 +8,7 @@
         "@typescript-eslint/strict-boolean-expressions": "off",
         "indent": ["error", 4],
         "quotes": ["error", "double"],
-        "comma-dangle": ["error", "only-multiline"]
+        "comma-dangle": ["error", "only-multiline"],
+        "semi": ["error", "always"]
     }
 }
