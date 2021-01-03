@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "Diego Pupato <pupato.diego@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
 }
