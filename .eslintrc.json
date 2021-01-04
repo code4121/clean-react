@@ -27,22 +27,27 @@
         "quotes": ["error", "double"],
         "comma-dangle": ["error", "only-multiline"],
         "semi": ["error", "always"],
+        "import/prefer-default-export": "off",
+        "linebreak-style": ["error", "unix"],
         "import/no-duplicates": "off",
-        "react/jsx-filename-extension": [
-            1,
-            {
-                "extensions": [".tsx"]
-            }
-        ],
+        // "react/jsx-filename-extension": [
+        //     1,
+        //     {
+        //         "extensions": [".tsx", ".ts"]
+        //     }
+        // ],
         // Indent with 4 spaces
         "indent": ["error", 4],
         // Indent JSX with 4 spaces
-        "react/jsx-indent": ["error", 4],
+        // "react/jsx-indent": ["error", 4],
         // Indent props with 4 spaces
-        "react/jsx-indent-props": ["error", 4],
+        // "react/jsx-indent-props": ["error", 4],
         // CamelCase
         "camelcase": "off",
-        "react/jsx-curly-newline": "off"
+        "react/jsx-curly-newline": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/method-signature-style": "off"
+        // "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }]
     },
     "settings": {
         "import/resolver": {
