@@ -56,7 +56,8 @@
         // allow object as type
         "@typescript-eslint/ban-types": "off",
         // allow any as type
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "import/export": "off"
     },
     "settings": {
         "import/resolver": {
