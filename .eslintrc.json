@@ -1,10 +1,19 @@
 {
+    "settings": {
+        "react": {
+            "version": "detect"
+        },
+        "import/resolver": {
+            "typescript": {}
+        }
+    },
     "env": {
         "browser": true,
         "es6": true
     },
     "extends": [
         "standard-with-typescript",
+        "plugin:react/recommended",
         "plugin:jest/recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier/@typescript-eslint",
@@ -19,7 +28,7 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint", "prettier"],
+    "plugins": ["react", "@typescript-eslint", "prettier"],
     "rules": {
         "prettier/prettier": "error",
         "@typescript-eslint/consistent-type-definitions": "off",
@@ -30,12 +39,6 @@
         "import/prefer-default-export": "off",
         "linebreak-style": ["error", "unix"],
         "import/no-duplicates": "off",
-        // "react/jsx-filename-extension": [
-        //     1,
-        //     {
-        //         "extensions": [".tsx", ".ts"]
-        //     }
-        // ],
         // Indent with 4 spaces
         "indent": [
             "error",
@@ -44,10 +47,6 @@
                 "SwitchCase": 1
             }
         ],
-        // Indent JSX with 4 spaces
-        // "react/jsx-indent": ["error", 4],
-        // Indent props with 4 spaces
-        // "react/jsx-indent-props": ["error", 4],
         // CamelCase
         "camelcase": "off",
         "react/jsx-curly-newline": "off",
@@ -57,11 +56,13 @@
         "@typescript-eslint/ban-types": "off",
         // allow any as type
         "@typescript-eslint/no-explicit-any": "off",
-        "import/export": "off"
-    },
-    "settings": {
-        "import/resolver": {
-            "typescript": {}
-        }
+        "import/export": "off",
+        //// REACT
+        //// Indent JSX with 4 spaces
+        "react/jsx-indent": ["error", 4],
+        //// Indent props with 4 spaces
+        "react/jsx-indent-props": ["error", 4],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error"
     }
 }
