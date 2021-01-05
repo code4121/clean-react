@@ -100,10 +100,16 @@ button {
             }
 
             .status {
+                display: flex;
+                align-items: center;
                 position: absolute;
                 right: 0.5rem;
                 font-size: 12px;
                 cursor: help;
+
+                svg {
+                    color: $error;
+                }
             }
         }
 
