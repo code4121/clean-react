@@ -1,0 +1,149 @@
+@import "../../styles/colors.scss";
+
+* {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: $background;
+}
+
+input[type="email"],
+input[type="password"] {
+    border: 1px solid $primaryLight;
+    line-height: 2.5rem;
+    border-radius: 0.25rem;
+    padding: 0 2rem 0 0.5rem;
+
+    &:focus {
+        outline-color: $primaryLight;
+    }
+}
+
+button {
+    background-color: $primary;
+    color: $white;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 600;
+    padding: 0 1rem;
+    line-height: 3.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: $primaryDark;
+    }
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        background-color: $primary;
+        border-top: 2.5rem solid $primaryDark;
+        align-items: center;
+
+        img {
+            margin-top: 2.5rem;
+        }
+
+        h1 {
+            color: $white;
+            margin: 1rem 0 2.5rem;
+        }
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        background: $white;
+        padding: 2.5rem;
+        border-radius: 0.5rem;
+        align-self: center;
+
+        // max-width: 25rem;
+        width: 100%;
+        max-width: 37.5rem;
+
+        // box-shadow: 0 1px 3px -1px $black;
+        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+            0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+        h2 {
+            color: $primaryDark;
+            text-align: center;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .inputWrap {
+            display: flex;
+            margin-bottom: 1rem;
+            width: 100%;
+            position: relative;
+            align-items: center;
+
+            input {
+                flex-grow: 1;
+            }
+
+            .status {
+                position: absolute;
+                right: 0.5rem;
+                font-size: 12px;
+                cursor: help;
+            }
+        }
+
+        .submit {
+            margin-top: 1.5rem;
+        }
+
+        .link {
+            text-align: center;
+            color: $primary;
+            margin-top: 1rem;
+            text-transform: lowercase;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .errorWrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .spinner {
+                margin-top: 2rem;
+            }
+
+            .error {
+                margin-top: 1rem;
+                color: $error;
+            }
+        }
+    }
+
+    .footer {
+        background-color: $primary;
+        height: 2.5rem;
+    }
+}

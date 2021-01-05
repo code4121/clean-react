@@ -5,7 +5,7 @@
     "author": "Diego Pupato <pupato.diego@gmail.com>",
     "main": "index.js",
     "scripts": {
-        "start": "webpack-dev-server --open",
+        "start": "webpack-cli serve --open --mode development",
         "test": "jest --passWithNoTests --no-cache --runInBand",
         "test:watch": "yarn test -- --watch",
         "test:staged": "yarn test -- --findRelatedTests",
