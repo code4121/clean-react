@@ -71,31 +71,6 @@ button {
             margin-bottom: 1rem;
         }
 
-        .inputWrap {
-            display: flex;
-            margin-bottom: 1rem;
-            width: 100%;
-            position: relative;
-            align-items: center;
-
-            input {
-                flex-grow: 1;
-            }
-
-            .status {
-                display: flex;
-                align-items: center;
-                position: absolute;
-                right: 0.5rem;
-                font-size: 12px;
-                cursor: help;
-
-                svg {
-                    color: $error;
-                }
-            }
-        }
-
         .submit {
             margin-top: 1.5rem;
         }
