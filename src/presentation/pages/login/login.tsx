@@ -11,21 +11,24 @@ import {
 
 import Styles from "./login-styles.scss";
 
-type StateProps = {
-    isLoading: boolean;
-    errorMessage: string;
-};
-
 const Login: React.FC = () => {
-    const [state, setState] = useState<StateProps>({
+    const [state, setState] = useState({
         isLoading: false,
-        errorMessage: "",
+        // errorMessage: "",
+        // emailError: "Required field",
+        // passwordError: "Required field",
+    });
+
+    const [errorState, setErrorState] = useState({
+        email: "Required field",
+        password: "Required field",
+        main: "",
     });
 
     return (
         <div className={Styles.login}>
             <LoginHeader />
-            <Context.Provider value={state}>
+            <Context.Provider value={{ state, errorState }}>
                 <form className={Styles.form}>
                     <h2>Login</h2>
                     <Input
