@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import { IconBaseProps } from "react-icons";
 import { FaExclamationCircle } from "react-icons/fa";
-import { IValidation } from "@/presentation/protocols/validation";
+import { ValidationSpy } from "@/presentation/test";
 
 import Login from "./login";
 
@@ -15,18 +15,6 @@ type SutTypes = {
     sut: RenderResult;
     validationSpy: ValidationSpy;
 };
-
-class ValidationSpy implements IValidation {
-    errorMessage: string;
-    fieldName: string;
-    fieldValue: string;
-
-    validate(fieldName: string, fieldValue: string): string {
-        this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
-        return this.errorMessage;
-    }
-}
 
 const makeSut = (): SutTypes => {
     const validationSpy = new ValidationSpy();
