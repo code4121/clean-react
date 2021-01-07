@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
 
@@ -13,8 +13,8 @@ type Props = React.DetailedHTMLProps<
 >;
 
 const Input: React.FC<Props> = (props: Props) => {
-    const { errorState } = useContext(Context);
-    const error = errorState[props.name];
+    const { state, setState } = useContext(Context);
+    const error = state[`${props.name}Error`];
     const enableInput = (e: React.FocusEvent<HTMLInputElement>): void => {
         e.target.readOnly = false;
     };
@@ -30,9 +30,28 @@ const Input: React.FC<Props> = (props: Props) => {
         return error;
     };
 
+    // const handleChange = (e: React.FocusEvent<HTMLInputElement>): void => {
+
+    // };
+    const handleChange = useCallback(
+        (e: React.FocusEvent<HTMLInputElement>) => {
+            setState({
+                ...state,
+                [e.target.name]: e.target.value,
+            });
+        },
+        [],
+    );
+
     return (
         <div className={Styles.inputWrap}>
-            <input {...props} readOnly onFocus={enableInput} />
+            <input
+                {...props}
+                data-testid={props.name}
+                readOnly
+                onFocus={enableInput}
+                onChange={handleChange}
+            />
             <span
                 data-testid={`${props.name}-status`}
                 title={getTitle()}
