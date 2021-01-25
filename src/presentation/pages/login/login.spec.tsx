@@ -87,4 +87,21 @@ describe("Login Component", () => {
         // expect(passwordStatus.textContent).toBe(errorMessage);
         expect(passwordErrorIcon).toBeTruthy();
     });
+
+    test("Should show valid password state if Validation succeeds", () => {
+        const { sut, validationStub } = makeSut();
+        validationStub.errorMessage = null;
+        const passwordInput = sut.getByTestId("password");
+        // const passwordSuccessIcon = sut.getByTestId(
+        //     "password-success-icon",
+        // ) as IconBaseProps;
+
+        fireEvent.input(passwordInput, {
+            target: { value: faker.internet.password() },
+        });
+
+        const passwordStatus = sut.getByTestId("password-status");
+        expect(passwordStatus.title).toBe("All good");
+        // expect(passwordSuccessIcon).toBeTruthy();
+    });
 });
