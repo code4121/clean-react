@@ -88,6 +88,23 @@ describe("Login Component", () => {
         expect(passwordErrorIcon).toBeTruthy();
     });
 
+    test("Should show valid email state if Validation succeeds", () => {
+        const { sut, validationStub } = makeSut();
+        validationStub.errorMessage = null;
+        const emailInput = sut.getByTestId("email");
+        // const emailSuccessIcon = sut.getByTestId(
+        //     "email-success-icon",
+        // ) as IconBaseProps;
+
+        fireEvent.input(emailInput, {
+            target: { value: faker.internet.email() },
+        });
+
+        const emailStatus = sut.getByTestId("email-status");
+        expect(emailStatus.title).toBe("All good");
+        // expect(emailSuccessIcon).toBeTruthy();
+    });
+
     test("Should show valid password state if Validation succeeds", () => {
         const { sut, validationStub } = makeSut();
         validationStub.errorMessage = null;
