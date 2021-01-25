@@ -11,7 +11,7 @@
         flex-grow: 1;
     }
 
-    .status {
+    .error {
         display: flex;
         align-items: center;
         position: absolute;
@@ -21,6 +21,19 @@
 
         svg {
             color: $error;
+        }
+    }
+
+    .success {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 0.5rem;
+        font-size: 12px;
+        cursor: help;
+
+        svg {
+            color: $success;
         }
     }
 }

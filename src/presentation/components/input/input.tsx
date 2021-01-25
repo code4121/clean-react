@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 
 import Context from "@/presentation/contexts/form/form-context";
 
@@ -19,15 +19,25 @@ const Input: React.FC<Props> = (props: Props) => {
         e.target.readOnly = false;
     };
 
-    const getStatus = (): IconBaseProps => (
-        <FaExclamationCircle
-            data-testid={`${props.name}-error-icon`}
-            size={16}
-        />
-    );
+    const getStatus = (): IconBaseProps => {
+        if (error)
+            return (
+                <FaExclamationCircle
+                    data-testid={`${props.name}-error-icon`}
+                    size={16}
+                />
+            );
+
+        return (
+            <FaCheckCircle
+                data-testid={`${props.name}-success-icon`}
+                size={16}
+            />
+        );
+    };
 
     const getTitle = (): string => {
-        return error;
+        return error || "All good";
     };
 
     // const handleChange = (e: React.FocusEvent<HTMLInputElement>): void => {
@@ -55,7 +65,7 @@ const Input: React.FC<Props> = (props: Props) => {
             <span
                 data-testid={`${props.name}-status`}
                 title={getTitle()}
-                className={Styles.status}
+                className={error ? Styles.error : Styles.success}
             >
                 {getStatus()}
             </span>
