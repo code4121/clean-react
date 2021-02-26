@@ -54,7 +54,7 @@ const Input: React.FC<Props> = (props: Props) => {
     //             [e.target.name]: e.target.value,
     //         });
     //     },
-    //     [],
+    //     [state],
     // );
 
     return (
