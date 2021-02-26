@@ -40,18 +40,22 @@ const Input: React.FC<Props> = (props: Props) => {
         return error || "All good";
     };
 
-    // const handleChange = (e: React.FocusEvent<HTMLInputElement>): void => {
+    const handleChange = (e: React.FocusEvent<HTMLInputElement>): void => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value,
+        });
+    };
 
-    // };
-    const handleChange = useCallback(
-        (e: React.FocusEvent<HTMLInputElement>) => {
-            setState({
-                ...state,
-                [e.target.name]: e.target.value,
-            });
-        },
-        [],
-    );
+    // const handleChange = useCallback(
+    //     (e: React.FocusEvent<HTMLInputElement>) => {
+    //         setState({
+    //             ...state,
+    //             [e.target.name]: e.target.value,
+    //         });
+    //     },
+    //     [],
+    // );
 
     return (
         <div className={Styles.inputWrap}>
