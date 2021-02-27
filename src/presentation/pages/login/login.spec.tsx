@@ -38,6 +38,50 @@ const makeSut = (params?: SutParams): SutTypes => {
     return { sut, authenticationSpy };
 };
 
+const simulateValidSubmit = (
+    sut: RenderResult,
+    email = faker.internet.email(),
+    password = faker.internet.password(),
+): void => {
+    populateEmailField(sut, email);
+    populatePasswordField(sut, password);
+
+    const submitButton = sut.getByTestId("submit");
+    fireEvent.click(submitButton);
+};
+
+const populateEmailField = (
+    sut: RenderResult,
+    email = faker.internet.email(),
+): void => {
+    const emailInput = sut.getByTestId("email");
+    fireEvent.input(emailInput, {
+        target: { value: email },
+    });
+};
+
+const populatePasswordField = (
+    sut: RenderResult,
+    password = faker.internet.password(),
+): void => {
+    const passwordInput = sut.getByTestId("password");
+    fireEvent.input(passwordInput, {
+        target: { value: password },
+    });
+};
+
+const simulateStatusForField = (
+    sut: RenderResult,
+    fieldName: string,
+    validationError?: string,
+    errorIcon?: IconBaseProps,
+): void => {
+    const fieldStatus = sut.getByTestId(`${fieldName}-status`);
+    expect(fieldStatus.title).toBe(validationError || "All good");
+
+    if (validationError) expect(errorIcon).toBeTruthy();
+};
+
 describe("Login Component", () => {
     afterEach(cleanup);
 
@@ -47,93 +91,77 @@ describe("Login Component", () => {
 
         const errorWrap = sut.getByTestId("error-wrap");
         const submitButton = sut.getByTestId("submit") as HTMLButtonElement;
-        const emailStatus = sut.getByTestId("email-status");
         const emailErrorIcon = sut.getByTestId(
             "email-error-icon",
         ) as IconBaseProps;
-        const passwordStatus = sut.getByTestId("password-status");
+
         const passwordErrorIcon = sut.getByTestId(
             "password-error-icon",
         ) as IconBaseProps;
+
+        simulateStatusForField(sut, "email", validationError, emailErrorIcon);
+
+        simulateStatusForField(
+            sut,
+            "password",
+            validationError,
+            passwordErrorIcon,
+        );
 
         expect(errorWrap.childElementCount).toBe(0);
         expect(submitButton.disabled).toBe(true);
-        expect(emailStatus.title).toBe(validationError);
-        expect(emailErrorIcon).toBeTruthy();
-        expect(passwordStatus.title).toBe(validationError);
-        expect(passwordErrorIcon).toBeTruthy();
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should show email error if Validation fails", () => {
         const validationError = faker.random.words();
         const { sut } = makeSut({ validationError });
-        const emailInput = sut.getByTestId("email");
+        populateEmailField(sut);
         const emailErrorIcon = sut.getByTestId(
             "email-error-icon",
         ) as IconBaseProps;
 
-        fireEvent.input(emailInput, {
-            target: { value: faker.internet.email() },
-        });
-
-        const emailStatus = sut.getByTestId("email-status");
-        expect(emailStatus.title).toBe(validationError);
-        expect(emailErrorIcon).toBeTruthy();
+        simulateStatusForField(sut, "email", validationError, emailErrorIcon);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should show password error if Validation fails", () => {
         const validationError = faker.random.words();
         const { sut } = makeSut({ validationError });
-        const passwordInput = sut.getByTestId("password");
+        populatePasswordField(sut);
         const passwordErrorIcon = sut.getByTestId(
             "password-error-icon",
         ) as IconBaseProps;
 
-        fireEvent.input(passwordInput, {
-            target: { value: faker.internet.password() },
-        });
-
-        const passwordStatus = sut.getByTestId("password-status");
-        expect(passwordStatus.title).toBe(validationError);
-        expect(passwordErrorIcon).toBeTruthy();
+        simulateStatusForField(
+            sut,
+            "password",
+            validationError,
+            passwordErrorIcon,
+        );
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should show valid email state if Validation succeeds", () => {
         const { sut } = makeSut();
-        const emailInput = sut.getByTestId("email");
+        populateEmailField(sut);
 
-        fireEvent.input(emailInput, {
-            target: { value: faker.internet.email() },
-        });
-
-        const emailStatus = sut.getByTestId("email-status");
-        expect(emailStatus.title).toBe("All good");
+        simulateStatusForField(sut, "email");
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should show valid password state if Validation succeeds", () => {
         const { sut } = makeSut();
-        const passwordInput = sut.getByTestId("password");
+        populatePasswordField(sut);
 
-        fireEvent.input(passwordInput, {
-            target: { value: faker.internet.password() },
-        });
-
-        const passwordStatus = sut.getByTestId("password-status");
-        expect(passwordStatus.title).toBe("All good");
+        simulateStatusForField(sut, "password");
     });
 
     test("Should enable submit button if form is valid", () => {
         const { sut } = makeSut();
 
-        const emailInput = sut.getByTestId("email");
-        fireEvent.input(emailInput, {
-            target: { value: faker.internet.email() },
-        });
-
-        const passwordInput = sut.getByTestId("password");
-        fireEvent.input(passwordInput, {
-            target: { value: faker.internet.password() },
-        });
+        populateEmailField(sut);
+        populatePasswordField(sut);
 
         const submitButton = sut.getByTestId("submit") as HTMLButtonElement;
         expect(submitButton.disabled).toBe(false);
@@ -142,18 +170,7 @@ describe("Login Component", () => {
     test("Should show spinner on submit", () => {
         const { sut } = makeSut();
 
-        const emailInput = sut.getByTestId("email");
-        fireEvent.input(emailInput, {
-            target: { value: faker.internet.email() },
-        });
-
-        const passwordInput = sut.getByTestId("password");
-        fireEvent.input(passwordInput, {
-            target: { value: faker.internet.password() },
-        });
-
-        const submitButton = sut.getByTestId("submit");
-        fireEvent.click(submitButton);
+        simulateValidSubmit(sut);
 
         const spinner = sut.getByTestId("spinner");
         expect(spinner).toBeTruthy();
@@ -161,21 +178,10 @@ describe("Login Component", () => {
 
     test("Should call Authentication with correct values", () => {
         const { sut, authenticationSpy } = makeSut();
-
-        const emailInput = sut.getByTestId("email");
         const email = faker.internet.email();
-        fireEvent.input(emailInput, {
-            target: { value: email },
-        });
-
-        const passwordInput = sut.getByTestId("password");
         const password = faker.internet.password();
-        fireEvent.input(passwordInput, {
-            target: { value: password },
-        });
 
-        const submitButton = sut.getByTestId("submit");
-        fireEvent.click(submitButton);
+        simulateValidSubmit(sut, email, password);
 
         expect(authenticationSpy.params).toEqual({
             email,
