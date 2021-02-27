@@ -47,16 +47,18 @@ const makeSut = (params?: SutParams): SutTypes => {
     return { sut, authenticationSpy };
 };
 
-const simulateValidSubmit = (
+const simulateValidSubmit = async (
     sut: RenderResult,
     email = faker.internet.email(),
     password = faker.internet.password(),
-): void => {
+): Promise<void> => {
     populateEmailField(sut, email);
     populatePasswordField(sut, password);
 
-    const submitButton = sut.getByTestId("submit");
-    fireEvent.click(submitButton);
+    const form = sut.getByTestId("form");
+    fireEvent.submit(form);
+
+    await waitFor(() => form);
 };
 
 const populateEmailField = (
@@ -79,7 +81,7 @@ const populatePasswordField = (
     });
 };
 
-const simulateStatusForField = (
+const testStatusForField = (
     sut: RenderResult,
     fieldName: string,
     validationError?: string,
@@ -91,6 +93,34 @@ const simulateStatusForField = (
     if (validationError) expect(errorIcon).toBeTruthy();
 };
 
+const testErrorWrapChildCount = (sut: RenderResult, count: number): void => {
+    const errorWrap = sut.getByTestId("error-wrap");
+    expect(errorWrap.childElementCount).toBe(count);
+};
+
+const testElementExists = (sut: RenderResult, fieldName: string): void => {
+    const element = sut.getByTestId(fieldName);
+    expect(element).toBeTruthy();
+};
+
+const testElementText = (
+    sut: RenderResult,
+    fieldName: string,
+    text: string,
+): void => {
+    const element = sut.getByTestId(fieldName);
+    expect(element.textContent).toBe(text);
+};
+
+const testButtonIsDisabled = (
+    sut: RenderResult,
+    fieldName: string,
+    isDisabled: boolean,
+): void => {
+    const button = sut.getByTestId(fieldName) as HTMLButtonElement;
+    expect(button.disabled).toBe(isDisabled);
+};
+
 describe("Login Component", () => {
     afterEach(cleanup);
 
@@ -98,12 +128,11 @@ describe("Login Component", () => {
         localStorage.clear();
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should start with initial state", () => {
         const validationError = faker.random.words();
         const { sut } = makeSut({ validationError });
 
-        const errorWrap = sut.getByTestId("error-wrap");
-        const submitButton = sut.getByTestId("submit") as HTMLButtonElement;
         const emailErrorIcon = sut.getByTestId(
             "email-error-icon",
         ) as IconBaseProps;
@@ -112,17 +141,10 @@ describe("Login Component", () => {
             "password-error-icon",
         ) as IconBaseProps;
 
-        simulateStatusForField(sut, "email", validationError, emailErrorIcon);
-
-        simulateStatusForField(
-            sut,
-            "password",
-            validationError,
-            passwordErrorIcon,
-        );
-
-        expect(errorWrap.childElementCount).toBe(0);
-        expect(submitButton.disabled).toBe(true);
+        testStatusForField(sut, "email", validationError, emailErrorIcon);
+        testStatusForField(sut, "password", validationError, passwordErrorIcon);
+        testErrorWrapChildCount(sut, 0);
+        testButtonIsDisabled(sut, "submit", true);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -134,7 +156,7 @@ describe("Login Component", () => {
             "email-error-icon",
         ) as IconBaseProps;
 
-        simulateStatusForField(sut, "email", validationError, emailErrorIcon);
+        testStatusForField(sut, "email", validationError, emailErrorIcon);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -146,12 +168,7 @@ describe("Login Component", () => {
             "password-error-icon",
         ) as IconBaseProps;
 
-        simulateStatusForField(
-            sut,
-            "password",
-            validationError,
-            passwordErrorIcon,
-        );
+        testStatusForField(sut, "password", validationError, passwordErrorIcon);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -159,7 +176,7 @@ describe("Login Component", () => {
         const { sut } = makeSut();
         populateEmailField(sut);
 
-        simulateStatusForField(sut, "email");
+        testStatusForField(sut, "email");
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -167,34 +184,33 @@ describe("Login Component", () => {
         const { sut } = makeSut();
         populatePasswordField(sut);
 
-        simulateStatusForField(sut, "password");
+        testStatusForField(sut, "password");
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should enable submit button if form is valid", () => {
         const { sut } = makeSut();
 
         populateEmailField(sut);
         populatePasswordField(sut);
-
-        const submitButton = sut.getByTestId("submit") as HTMLButtonElement;
-        expect(submitButton.disabled).toBe(false);
+        testButtonIsDisabled(sut, "submit", false);
     });
 
-    test("Should show spinner on submit", () => {
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show spinner on submit", async () => {
         const { sut } = makeSut();
 
-        simulateValidSubmit(sut);
+        await simulateValidSubmit(sut);
 
-        const spinner = sut.getByTestId("spinner");
-        expect(spinner).toBeTruthy();
+        testElementExists(sut, "spinner");
     });
 
-    test("Should call Authentication with correct values", () => {
+    test("Should call Authentication with correct values", async () => {
         const { sut, authenticationSpy } = makeSut();
         const email = faker.internet.email();
         const password = faker.internet.password();
 
-        simulateValidSubmit(sut, email, password);
+        await simulateValidSubmit(sut, email, password);
 
         expect(authenticationSpy.params).toEqual({
             email,
@@ -202,26 +218,25 @@ describe("Login Component", () => {
         });
     });
 
-    test("Should call Authentication only once", () => {
+    test("Should call Authentication only once", async () => {
         const { sut, authenticationSpy } = makeSut();
 
-        simulateValidSubmit(sut);
-        simulateValidSubmit(sut);
+        await simulateValidSubmit(sut);
+        await simulateValidSubmit(sut);
 
         expect(authenticationSpy.callsCount).toBe(1);
     });
 
-    test("Should not call Authentication if form is invalid", () => {
+    test("Should not call Authentication if form is invalid", async () => {
         const validationError = faker.random.words();
         const { sut, authenticationSpy } = makeSut({ validationError });
 
-        populateEmailField(sut);
-
-        fireEvent.submit(sut.getByTestId("form"));
+        await simulateValidSubmit(sut);
 
         expect(authenticationSpy.callsCount).toBe(0);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     test("Should present error if Authentication fails", async () => {
         const { sut, authenticationSpy } = makeSut();
         const error = new InvalidCredentialsError();
@@ -230,23 +245,16 @@ describe("Login Component", () => {
             Promise.reject(error),
         );
 
-        simulateValidSubmit(sut);
+        await simulateValidSubmit(sut);
 
-        const errorWrap = sut.getByTestId("error-wrap");
-
-        await waitFor(() => errorWrap);
-
-        const mainError = sut.getByTestId("main-error");
-
-        expect(mainError.textContent).toBe(error.message);
-        expect(errorWrap.childElementCount).toBe(1);
+        testErrorWrapChildCount(sut, 1);
+        testElementText(sut, "main-error", error.message);
     });
 
     test("Should add accessToken to localstorage on success", async () => {
         const { sut, authenticationSpy } = makeSut();
 
-        simulateValidSubmit(sut);
-        await waitFor(() => sut.getByTestId("form"));
+        await simulateValidSubmit(sut);
 
         expect(localStorage.setItem).toHaveBeenCalledWith(
             "@poll4devs:accessToken",
