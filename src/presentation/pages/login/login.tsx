@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
-
+import { Link } from "react-router-dom";
 import Context from "@/presentation/contexts/form/form-context";
-
 import {
     LoginHeader,
     Footer,
     Input,
     FormStatus,
 } from "@/presentation/components";
-
 import { IValidation } from "@/presentation/protocols/validation";
-
-import Styles from "./login-styles.scss";
 import { IAuthentication } from "@/domain/usecases";
+import Styles from "./login-styles.scss";
 
 type Props = {
     validation: IValidation;
@@ -92,7 +89,13 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
                     >
                         Sign In
                     </button>
-                    <span className={Styles.link}>Register</span>
+                    <Link
+                        data-testid="register"
+                        to="/signup"
+                        className={Styles.link}
+                    >
+                        Register
+                    </Link>
                     <FormStatus />
                 </form>
             </Context.Provider>
