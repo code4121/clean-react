@@ -8,15 +8,20 @@ import {
     FormStatus,
 } from "@/presentation/components";
 import { IValidation } from "@/presentation/protocols/validation";
-import { IAuthentication } from "@/domain/usecases";
+import { IAuthentication, ISaveAccessToken } from "@/domain/usecases";
 import Styles from "./login-styles.scss";
 
 type Props = {
     validation: IValidation;
     authentication: IAuthentication;
+    saveAccessToken: ISaveAccessToken;
 };
 
-const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+const Login: React.FC<Props> = ({
+    validation,
+    authentication,
+    saveAccessToken,
+}: Props) => {
     const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
@@ -52,7 +57,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
                 password: state.password,
             });
 
-            localStorage.setItem("@poll4devs:accessToken", account.accessToken);
+            await saveAccessToken.save(account.accessToken);
 
             history.replace("/");
         } catch (error) {
