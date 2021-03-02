@@ -42,7 +42,7 @@ module.exports = {
         writeToDisk: true,
         historyApiFallback: true
     },
-    // All files in externals, the webpack won't include in our bundle
+    // The Webpack won't include all files in the externals node in our bundle
     externals: {
         react: "React",
         "react-dom": "ReactDOM"
