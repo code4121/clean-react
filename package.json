@@ -1,6 +1,6 @@
 {
     "name": "clean-react",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "REACT APP using Clean Architecture and Typescript",
     "author": "Diego Pupato <pupato.diego@gmail.com>",
     "main": "index.js",
