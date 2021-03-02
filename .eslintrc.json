@@ -51,7 +51,6 @@
         "camelcase": "off",
         "react/jsx-curly-newline": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/method-signature-style": "off",
         // allow object as type
         "@typescript-eslint/ban-types": "off",
         // allow any as type
