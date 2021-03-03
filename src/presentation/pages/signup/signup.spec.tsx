@@ -50,7 +50,7 @@ describe("SignUp Component", () => {
         Helper.testStatusForField(
             sut,
             "email",
-            "Field is required",
+            validationError,
             emailErrorIcon,
         );
         Helper.testStatusForField(
@@ -86,6 +86,26 @@ describe("SignUp Component", () => {
             fieldName,
             validationError,
             nameErrorIcon,
+        );
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show email error if Validation fails", () => {
+        const validationError = faker.random.words();
+        const { sut } = makeSut({ validationError });
+        const fieldName = "email";
+
+        Helper.populateField(sut, fieldName);
+
+        const emailErrorIcon = sut.getByTestId(
+            `${fieldName}-error-icon`,
+        ) as IconBaseProps;
+
+        Helper.testStatusForField(
+            sut,
+            fieldName,
+            validationError,
+            emailErrorIcon,
         );
     });
 });
