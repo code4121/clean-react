@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Context from "@/presentation/contexts/form/form-context";
 import {
     LoginHeader,
@@ -6,22 +6,35 @@ import {
     Input,
     FormStatus,
 } from "@/presentation/components";
+import { IValidation } from "@/presentation/protocols/validation";
 import Styles from "./signup-styles.scss";
 
-const SignUp: React.FC = () => {
-    const [state] = useState({
+type Props = {
+    validation: IValidation;
+};
+
+const SignUp: React.FC<Props> = ({ validation }: Props) => {
+    const [state, setState] = useState({
         isLoading: false,
-        nameError: "Field is required",
+        name: "",
+        nameError: "",
         emailError: "Field is required",
         passwordError: "Field is required",
         passwordConfirmationError: "Field is required",
         mainError: "",
     });
 
+    useEffect(() => {
+        setState({
+            ...state,
+            nameError: validation.validate("email", state.name),
+        });
+    }, [state.name]);
+
     return (
         <div className={Styles.signup}>
             <LoginHeader />
-            <Context.Provider value={{ state }}>
+            <Context.Provider value={{ state, setState }}>
                 <form className={Styles.form}>
                     <h2>Create your account</h2>
                     <Input
