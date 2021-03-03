@@ -56,7 +56,7 @@ describe("SignUp Component", () => {
         Helper.testStatusForField(
             sut,
             "password",
-            "Field is required",
+            validationError,
             passwordErrorIcon,
         );
         Helper.testStatusForField(
@@ -106,6 +106,26 @@ describe("SignUp Component", () => {
             fieldName,
             validationError,
             emailErrorIcon,
+        );
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show password error if Validation fails", () => {
+        const validationError = faker.random.words();
+        const { sut } = makeSut({ validationError });
+        const fieldName = "password";
+
+        Helper.populateField(sut, fieldName);
+
+        const passwordErrorIcon = sut.getByTestId(
+            `${fieldName}-error-icon`,
+        ) as IconBaseProps;
+
+        Helper.testStatusForField(
+            sut,
+            fieldName,
+            validationError,
+            passwordErrorIcon,
         );
     });
 });
