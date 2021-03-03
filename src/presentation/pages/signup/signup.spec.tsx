@@ -1,7 +1,13 @@
 import React from "react";
 import { IconBaseProps } from "react-icons";
 import faker from "faker";
-import { RenderResult, render, cleanup } from "@testing-library/react";
+import {
+    RenderResult,
+    render,
+    cleanup,
+    fireEvent,
+    waitFor,
+} from "@testing-library/react";
 import { SignUp } from "@/presentation/pages";
 import { Helper, ValidationStub } from "@/presentation/test";
 
@@ -20,6 +26,28 @@ const makeSut = (params?: SutParams): SutTypes => {
     const sut = render(<SignUp validation={validationStub} />);
 
     return { sut };
+};
+
+const simulateValidSubmit = async (
+    sut: RenderResult,
+    name = faker.internet.email(),
+    email = faker.internet.email(),
+    password = faker.internet.password(),
+): Promise<void> => {
+    Helper.populateField(sut, "name", name);
+    Helper.populateField(sut, "email", email);
+    Helper.populateField(sut, "password", password);
+    Helper.populateField(sut, "passwordConfirmation", password);
+
+    const form = sut.getByTestId("form");
+    fireEvent.submit(form);
+
+    await waitFor(() => form);
+};
+
+const testElementExists = (sut: RenderResult, fieldName: string): void => {
+    const element = sut.getByTestId(fieldName);
+    expect(element).toBeTruthy();
 };
 
 describe("SignUp Component", () => {
@@ -190,5 +218,14 @@ describe("SignUp Component", () => {
         Helper.populateField(sut, "password");
         Helper.populateField(sut, "passwordConfirmation");
         Helper.testButtonIsDisabled(sut, "submit", false);
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show spinner on submit", async () => {
+        const { sut } = makeSut();
+
+        await simulateValidSubmit(sut);
+
+        testElementExists(sut, "spinner");
     });
 });
