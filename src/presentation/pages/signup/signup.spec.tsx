@@ -1,24 +1,50 @@
 import React from "react";
 import { IconBaseProps } from "react-icons";
+import faker from "faker";
+import {
+    RenderResult,
+    render,
+    cleanup,
+    fireEvent,
+} from "@testing-library/react";
 import { SignUp } from "@/presentation/pages";
-import { RenderResult, render } from "@testing-library/react";
-import { Helper } from "@/presentation/test";
+import { Helper, ValidationStub } from "@/presentation/test";
 
 type SutTypes = {
     sut: RenderResult;
 };
 
-const makeSut = (): SutTypes => {
-    const sut = render(<SignUp />);
+type SutParams = {
+    validationError: string;
+};
+
+const makeSut = (params?: SutParams): SutTypes => {
+    const validationStub = new ValidationStub();
+    validationStub.errorMessage = params?.validationError;
+
+    const sut = render(<SignUp validation={validationStub} />);
 
     return { sut };
 };
 
+const populateField = (
+    sut: RenderResult,
+    fieldName: string,
+    value = faker.random.word(),
+): void => {
+    const input = sut.getByTestId(fieldName);
+    fireEvent.input(input, {
+        target: { value },
+    });
+};
+
 describe("SignUp Component", () => {
+    afterEach(cleanup);
+
     // eslint-disable-next-line jest/expect-expect
     test("Should start with initial state", () => {
-        const validationError = "Field is required";
-        const { sut } = makeSut();
+        const validationError = faker.random.words();
+        const { sut } = makeSut({ validationError });
 
         const nameErrorIcon = sut.getByTestId(
             "name-error-icon",
@@ -40,22 +66,42 @@ describe("SignUp Component", () => {
         Helper.testStatusForField(
             sut,
             "email",
-            validationError,
+            "Field is required",
             emailErrorIcon,
         );
         Helper.testStatusForField(
             sut,
             "password",
-            validationError,
+            "Field is required",
             passwordErrorIcon,
         );
         Helper.testStatusForField(
             sut,
             "passwordConfirmation",
-            validationError,
+            "Field is required",
             passwordConfirmationErrorIcon,
         );
         Helper.testChildCount(sut, "error-wrap", 0);
         Helper.testButtonIsDisabled(sut, "submit", true);
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show name error if Validation fails", () => {
+        const validationError = faker.random.words();
+        const { sut } = makeSut({ validationError });
+        const fieldName = "name";
+
+        populateField(sut, fieldName);
+
+        const nameErrorIcon = sut.getByTestId(
+            `${fieldName}-error-icon`,
+        ) as IconBaseProps;
+
+        Helper.testStatusForField(
+            sut,
+            fieldName,
+            validationError,
+            nameErrorIcon,
+        );
     });
 });
