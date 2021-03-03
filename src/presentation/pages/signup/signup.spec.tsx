@@ -164,4 +164,12 @@ describe("SignUp Component", () => {
 
         Helper.testStatusForField(sut, "email");
     });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show valid password state if Validation succeeds", () => {
+        const { sut } = makeSut();
+        Helper.populateField(sut, "password");
+
+        Helper.testStatusForField(sut, "password");
+    });
 });
