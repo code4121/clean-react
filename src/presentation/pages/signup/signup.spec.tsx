@@ -148,4 +148,12 @@ describe("SignUp Component", () => {
             passwordConfirmationErrorIcon,
         );
     });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show valid name state if Validation succeeds", () => {
+        const { sut } = makeSut();
+        Helper.populateField(sut, "name");
+
+        Helper.testStatusForField(sut, "name");
+    });
 });
