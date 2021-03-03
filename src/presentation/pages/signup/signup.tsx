@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Context from "@/presentation/contexts/form/form-context";
 import {
     LoginHeader,
@@ -70,7 +70,12 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
                         data-testid="submit"
                         className={Styles.submit}
                         type="submit"
-                        disabled
+                        disabled={
+                            !!state.nameError ||
+                            !!state.emailError ||
+                            !!state.passwordError ||
+                            !!state.passwordConfirmationError
+                        }
                     >
                         Create
                     </button>
