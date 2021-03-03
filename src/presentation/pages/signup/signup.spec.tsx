@@ -62,7 +62,7 @@ describe("SignUp Component", () => {
         Helper.testStatusForField(
             sut,
             "passwordConfirmation",
-            "Field is required",
+            validationError,
             passwordConfirmationErrorIcon,
         );
         Helper.testChildCount(sut, "error-wrap", 0);
@@ -126,6 +126,26 @@ describe("SignUp Component", () => {
             fieldName,
             validationError,
             passwordErrorIcon,
+        );
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should show passwordConfirmation error if Validation fails", () => {
+        const validationError = faker.random.words();
+        const { sut } = makeSut({ validationError });
+        const fieldName = "passwordConfirmation";
+
+        Helper.populateField(sut, fieldName);
+
+        const passwordConfirmationErrorIcon = sut.getByTestId(
+            `${fieldName}-error-icon`,
+        ) as IconBaseProps;
+
+        Helper.testStatusForField(
+            sut,
+            fieldName,
+            validationError,
+            passwordConfirmationErrorIcon,
         );
     });
 });
