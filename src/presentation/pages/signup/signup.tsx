@@ -8,12 +8,14 @@ import {
 } from "@/presentation/components";
 import { IValidation } from "@/presentation/protocols/validation";
 import Styles from "./signup-styles.scss";
+import { IAddAccount } from "@/domain/usecases";
 
 type Props = {
     validation: IValidation;
+    addAccount: IAddAccount;
 };
 
-const SignUp: React.FC<Props> = ({ validation }: Props) => {
+const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
     const [state, setState] = useState({
         isLoading: false,
         name: "",
@@ -46,6 +48,13 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
         event.preventDefault();
 
         setState({ ...state, isLoading: true });
+
+        await addAccount.add({
+            name: state.name,
+            email: state.email,
+            password: state.password,
+            passwordConfirmation: state.passwordConfirmation,
+        });
     };
 
     return (
