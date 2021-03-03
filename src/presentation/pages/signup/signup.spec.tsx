@@ -180,4 +180,15 @@ describe("SignUp Component", () => {
 
         Helper.testStatusForField(sut, "passwordConfirmation");
     });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should enable submit button if form is valid", () => {
+        const { sut } = makeSut();
+
+        Helper.populateField(sut, "name");
+        Helper.populateField(sut, "email");
+        Helper.populateField(sut, "password");
+        Helper.populateField(sut, "passwordConfirmation");
+        Helper.testButtonIsDisabled(sut, "submit", false);
+    });
 });
