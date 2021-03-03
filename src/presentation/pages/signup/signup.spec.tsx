@@ -1,7 +1,8 @@
 import React from "react";
-import { RenderResult, render } from "@testing-library/react";
-import SignUp from "./signup";
 import { IconBaseProps } from "react-icons";
+import { SignUp } from "@/presentation/pages";
+import { RenderResult, render } from "@testing-library/react";
+import { Helper } from "@/presentation/test";
 
 type SutTypes = {
     sut: RenderResult;
@@ -11,36 +12,6 @@ const makeSut = (): SutTypes => {
     const sut = render(<SignUp />);
 
     return { sut };
-};
-
-const testStatusForField = (
-    sut: RenderResult,
-    fieldName: string,
-    validationError?: string,
-    errorIcon?: IconBaseProps,
-): void => {
-    const fieldStatus = sut.getByTestId(`${fieldName}-status`);
-    expect(fieldStatus.title).toBe(validationError || "All good");
-
-    if (validationError) expect(errorIcon).toBeTruthy();
-};
-
-const testChildCount = (
-    sut: RenderResult,
-    fieldName: string,
-    count: number,
-): void => {
-    const element = sut.getByTestId(fieldName);
-    expect(element.childElementCount).toBe(count);
-};
-
-const testButtonIsDisabled = (
-    sut: RenderResult,
-    fieldName: string,
-    isDisabled: boolean,
-): void => {
-    const button = sut.getByTestId(fieldName) as HTMLButtonElement;
-    expect(button.disabled).toBe(isDisabled);
 };
 
 describe("SignUp Component", () => {
@@ -65,16 +36,26 @@ describe("SignUp Component", () => {
             "passwordConfirmation-error-icon",
         ) as IconBaseProps;
 
-        testStatusForField(sut, "name", validationError, nameErrorIcon);
-        testStatusForField(sut, "email", validationError, emailErrorIcon);
-        testStatusForField(sut, "password", validationError, passwordErrorIcon);
-        testStatusForField(
+        Helper.testStatusForField(sut, "name", validationError, nameErrorIcon);
+        Helper.testStatusForField(
+            sut,
+            "email",
+            validationError,
+            emailErrorIcon,
+        );
+        Helper.testStatusForField(
+            sut,
+            "password",
+            validationError,
+            passwordErrorIcon,
+        );
+        Helper.testStatusForField(
             sut,
             "passwordConfirmation",
             validationError,
             passwordConfirmationErrorIcon,
         );
-        testChildCount(sut, "error-wrap", 0);
-        testButtonIsDisabled(sut, "submit", true);
+        Helper.testChildCount(sut, "error-wrap", 0);
+        Helper.testButtonIsDisabled(sut, "submit", true);
     });
 });

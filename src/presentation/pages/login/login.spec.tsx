@@ -15,6 +15,7 @@ import {
     ValidationStub,
     AuthenticationSpy,
     SaveAccessTokenMock,
+    Helper,
 } from "@/presentation/test";
 
 import { Login } from "@/presentation/pages";
@@ -86,23 +87,6 @@ const populatePasswordField = (
     });
 };
 
-const testStatusForField = (
-    sut: RenderResult,
-    fieldName: string,
-    validationError?: string,
-    errorIcon?: IconBaseProps,
-): void => {
-    const fieldStatus = sut.getByTestId(`${fieldName}-status`);
-    expect(fieldStatus.title).toBe(validationError || "All good");
-
-    if (validationError) expect(errorIcon).toBeTruthy();
-};
-
-const testErrorWrapChildCount = (sut: RenderResult, count: number): void => {
-    const errorWrap = sut.getByTestId("error-wrap");
-    expect(errorWrap.childElementCount).toBe(count);
-};
-
 const testElementExists = (sut: RenderResult, fieldName: string): void => {
     const element = sut.getByTestId(fieldName);
     expect(element).toBeTruthy();
@@ -115,15 +99,6 @@ const testElementText = (
 ): void => {
     const element = sut.getByTestId(fieldName);
     expect(element.textContent).toBe(text);
-};
-
-const testButtonIsDisabled = (
-    sut: RenderResult,
-    fieldName: string,
-    isDisabled: boolean,
-): void => {
-    const button = sut.getByTestId(fieldName) as HTMLButtonElement;
-    expect(button.disabled).toBe(isDisabled);
 };
 
 describe("Login Component", () => {
@@ -142,10 +117,20 @@ describe("Login Component", () => {
             "password-error-icon",
         ) as IconBaseProps;
 
-        testStatusForField(sut, "email", validationError, emailErrorIcon);
-        testStatusForField(sut, "password", validationError, passwordErrorIcon);
-        testErrorWrapChildCount(sut, 0);
-        testButtonIsDisabled(sut, "submit", true);
+        Helper.testStatusForField(
+            sut,
+            "email",
+            validationError,
+            emailErrorIcon,
+        );
+        Helper.testStatusForField(
+            sut,
+            "password",
+            validationError,
+            passwordErrorIcon,
+        );
+        Helper.testChildCount(sut, "error-wrap", 0);
+        Helper.testButtonIsDisabled(sut, "submit", true);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -157,7 +142,12 @@ describe("Login Component", () => {
             "email-error-icon",
         ) as IconBaseProps;
 
-        testStatusForField(sut, "email", validationError, emailErrorIcon);
+        Helper.testStatusForField(
+            sut,
+            "email",
+            validationError,
+            emailErrorIcon,
+        );
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -169,7 +159,12 @@ describe("Login Component", () => {
             "password-error-icon",
         ) as IconBaseProps;
 
-        testStatusForField(sut, "password", validationError, passwordErrorIcon);
+        Helper.testStatusForField(
+            sut,
+            "password",
+            validationError,
+            passwordErrorIcon,
+        );
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -177,7 +172,7 @@ describe("Login Component", () => {
         const { sut } = makeSut();
         populateEmailField(sut);
 
-        testStatusForField(sut, "email");
+        Helper.testStatusForField(sut, "email");
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -185,7 +180,7 @@ describe("Login Component", () => {
         const { sut } = makeSut();
         populatePasswordField(sut);
 
-        testStatusForField(sut, "password");
+        Helper.testStatusForField(sut, "password");
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -194,7 +189,7 @@ describe("Login Component", () => {
 
         populateEmailField(sut);
         populatePasswordField(sut);
-        testButtonIsDisabled(sut, "submit", false);
+        Helper.testButtonIsDisabled(sut, "submit", false);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -248,7 +243,7 @@ describe("Login Component", () => {
 
         await simulateValidSubmit(sut);
 
-        testErrorWrapChildCount(sut, 1);
+        Helper.testChildCount(sut, "error-wrap", 1);
         testElementText(sut, "main-error", error.message);
     });
 
@@ -275,7 +270,7 @@ describe("Login Component", () => {
 
         await simulateValidSubmit(sut);
 
-        testErrorWrapChildCount(sut, 1);
+        Helper.testChildCount(sut, "error-wrap", 1);
         testElementText(sut, "main-error", error.message);
     });
 
