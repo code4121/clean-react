@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import { SignUp } from "@/presentation/pages";
 import { AddAccountSpy, Helper, ValidationStub } from "@/presentation/test";
+import { EmailInUseError } from "@/domain/errors";
 
 type SutTypes = {
     sut: RenderResult;
@@ -18,6 +19,15 @@ type SutTypes = {
 
 type SutParams = {
     validationError: string;
+};
+
+const testElementText = (
+    sut: RenderResult,
+    fieldName: string,
+    text: string,
+): void => {
+    const element = sut.getByTestId(fieldName);
+    expect(element.textContent).toBe(text);
 };
 
 const makeSut = (params?: SutParams): SutTypes => {
@@ -261,5 +271,18 @@ describe("SignUp Component", () => {
         await simulateValidSubmit(sut);
 
         expect(addAccountSpy.callsCount).toBe(0);
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    test("Should present error if AddAccount fails", async () => {
+        const { sut, addAccountSpy } = makeSut();
+        const error = new EmailInUseError();
+
+        jest.spyOn(addAccountSpy, "add").mockRejectedValueOnce(error);
+
+        await simulateValidSubmit(sut);
+
+        Helper.testChildCount(sut, "error-wrap", 1);
+        testElementText(sut, "main-error", error.message);
     });
 });
