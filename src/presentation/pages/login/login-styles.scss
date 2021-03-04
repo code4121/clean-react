@@ -31,14 +31,8 @@
             margin-bottom: 1rem;
         }
 
-        .submit {
+        button {
             margin-top: 1.5rem;
-
-            &:disabled {
-                background: $disabled-bg;
-                color: $disabled-text;
-                cursor: not-allowed;
-            }
         }
 
         .link {

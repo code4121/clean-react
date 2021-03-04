@@ -6,6 +6,7 @@ import {
     Footer,
     Input,
     FormStatus,
+    SubmitButton,
 } from "@/presentation/components";
 import { IValidation } from "@/presentation/protocols/validation";
 import { IAuthentication, ISaveAccessToken } from "@/domain/usecases";
@@ -94,14 +95,7 @@ const Login: React.FC<Props> = ({
                         name="password"
                         placeholder="Enter your password"
                     />
-                    <button
-                        data-testid="submit"
-                        className={Styles.submit}
-                        type="submit"
-                        disabled={state.isFormInvalid}
-                    >
-                        Sign In
-                    </button>
+                    <SubmitButton text="Sign In" />
                     <Link
                         data-testid="register-link"
                         to="/signup"

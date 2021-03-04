@@ -6,6 +6,7 @@ import {
     Footer,
     Input,
     FormStatus,
+    SubmitButton,
 } from "@/presentation/components";
 import { IValidation } from "@/presentation/protocols/validation";
 import Styles from "./signup-styles.scss";
@@ -119,14 +120,7 @@ const SignUp: React.FC<Props> = ({
                         name="passwordConfirmation"
                         placeholder="Re-enter your password"
                     />
-                    <button
-                        data-testid="submit"
-                        className={Styles.submit}
-                        type="submit"
-                        disabled={state.isFormInvalid}
-                    >
-                        Create
-                    </button>
+                    <SubmitButton text="Create" />
                     <Link
                         data-testid="login-link"
                         replace
