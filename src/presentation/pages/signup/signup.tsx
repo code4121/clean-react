@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Context from "@/presentation/contexts/form/form-context";
 import {
     LoginHeader,
@@ -129,7 +129,14 @@ const SignUp: React.FC<Props> = ({
                     >
                         Create
                     </button>
-                    <span className={Styles.link}>Go back to Login</span>
+                    <Link
+                        data-testid="login-link"
+                        replace
+                        to="/login"
+                        className={Styles.link}
+                    >
+                        Go back to Login
+                    </Link>
                     <FormStatus />
                 </form>
             </Context.Provider>
