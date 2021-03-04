@@ -1,4 +1,6 @@
 import React from "react";
+import { Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
 import { IconBaseProps } from "react-icons";
 import faker from "faker";
 import {
@@ -9,38 +11,44 @@ import {
     waitFor,
 } from "@testing-library/react";
 import { SignUp } from "@/presentation/pages";
-import { AddAccountSpy, Helper, ValidationStub } from "@/presentation/test";
+import {
+    AddAccountSpy,
+    Helper,
+    SaveAccessTokenMock,
+    ValidationStub,
+} from "@/presentation/test";
 import { EmailInUseError } from "@/domain/errors";
 
 type SutTypes = {
     sut: RenderResult;
     addAccountSpy: AddAccountSpy;
+    saveAccessTokenMock: SaveAccessTokenMock;
 };
 
 type SutParams = {
     validationError: string;
 };
 
-const testElementText = (
-    sut: RenderResult,
-    fieldName: string,
-    text: string,
-): void => {
-    const element = sut.getByTestId(fieldName);
-    expect(element.textContent).toBe(text);
-};
+const history = createMemoryHistory({ initialEntries: ["/signup"] });
 
 const makeSut = (params?: SutParams): SutTypes => {
     const validationStub = new ValidationStub();
     validationStub.errorMessage = params?.validationError;
 
     const addAccountSpy = new AddAccountSpy();
+    const saveAccessTokenMock = new SaveAccessTokenMock();
 
     const sut = render(
-        <SignUp validation={validationStub} addAccount={addAccountSpy} />,
+        <Router history={history}>
+            <SignUp
+                validation={validationStub}
+                addAccount={addAccountSpy}
+                saveAccessToken={saveAccessTokenMock}
+            />
+        </Router>,
     );
 
-    return { sut, addAccountSpy };
+    return { sut, addAccountSpy, saveAccessTokenMock };
 };
 
 const simulateValidSubmit = async (
@@ -283,6 +291,18 @@ describe("SignUp Component", () => {
         await simulateValidSubmit(sut);
 
         Helper.testChildCount(sut, "error-wrap", 1);
-        testElementText(sut, "main-error", error.message);
+        Helper.testElementText(sut, "main-error", error.message);
+    });
+
+    test("Should call SaveAccessToken on success", async () => {
+        const { sut, addAccountSpy, saveAccessTokenMock } = makeSut();
+
+        await simulateValidSubmit(sut);
+
+        expect(saveAccessTokenMock.accessToken).toBe(
+            addAccountSpy.account.accessToken,
+        );
+        expect(history.length).toBe(1);
+        expect(history.location.pathname).toBe("/");
     });
 });
